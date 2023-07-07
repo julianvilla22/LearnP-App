@@ -11,13 +11,24 @@ import es.com.uam.eps.tfg.learnp.model.Rule;
 
 class RuleAdapter(private val ruleList : List<Rule>) : RecyclerView.Adapter<RuleAdapter.Ruleviewholder>(){
 
+    private lateinit var mListener: RuleAdapter.onItemClickListener
+
+    interface onItemClickListener{
+
+        fun onItemClick(position: Int)
+
+    }
+
+    fun setOnItemClickListener(listener: RuleAdapter.onItemClickListener){
+        mListener = listener
+    }
     override fun onCreateViewHolder(
         parent:ViewGroup,
         viewType:Int
     ):Ruleviewholder{
         val v:View=
             LayoutInflater.from(parent.context).inflate(R.layout.word_result,parent,false)
-        return Ruleviewholder(v)
+        return Ruleviewholder(v, mListener)
     }
 
 
@@ -31,11 +42,15 @@ class RuleAdapter(private val ruleList : List<Rule>) : RecyclerView.Adapter<Rule
         return ruleList.size?:0
     }
 
-    class Ruleviewholder(itemView:View) :RecyclerView.ViewHolder(itemView){
+    class Ruleviewholder(itemView: View, listener: onItemClickListener) :RecyclerView.ViewHolder(itemView){
         var textResult: TextView
 
         init{
             textResult=itemView.findViewById(R.id.text_result)
+
+            itemView.setOnClickListener {
+                listener.onItemClick(adapterPosition)
+            }
 
         }
     }

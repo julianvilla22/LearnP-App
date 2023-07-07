@@ -1,21 +1,18 @@
 package es.com.uam.eps.tfg.learnp
 
-import android.R
 import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.speech.tts.Voice
 import android.util.Log
-import android.widget.ExpandableListAdapter
-import android.widget.ExpandableListView
-import android.widget.SearchView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import es.com.uam.eps.tfg.learnp.ExpandableListDataPump.data
 import es.com.uam.eps.tfg.learnp.adapter.RuleAdapter
 import es.com.uam.eps.tfg.learnp.adapter.WordAdapter
 import es.com.uam.eps.tfg.learnp.database.DbRequest
@@ -28,24 +25,24 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import kotlin.collections.HashMap
 
 
-class WordActivity : AppCompatActivity() {
+class WordActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityWordBinding
 
     private lateinit var rules : List<Rule>
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var homophones : List<Word>
+    private lateinit var rulesRecyclerView: RecyclerView
+    private lateinit var homophonesRecyclerView: RecyclerView
     private var idword: Long = 0
-    lateinit var ruleAdapter: RuleAdapter
+    private lateinit var ruleAdapter: RuleAdapter
+    private lateinit var wordAdapter: WordAdapter
+    private lateinit var tts: TextToSpeech
+    private lateinit var spkButton: ImageButton
+    private lateinit var textWord : String
 
-
-    var expandableListView: ExpandableListView? = null
-    var expandableListAdapter: ExpandableListAdapter? = null
-    var expandableListTitle: List<String>? = null
-    var expandableListDetail: HashMap<String, List<String>>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,47 +50,74 @@ class WordActivity : AppCompatActivity() {
         binding = ActivityWordBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        spkButton = binding.ttsButton
+        spkButton.isEnabled = false
+
+        tts = TextToSpeech(applicationContext, this)
+
+        spkButton.setOnClickListener{
+            speakOut()
+        }
+
+
         //setSupportActionBar(binding.toolbar)
-        var a = intent
-        binding.word.text = intent.getStringExtra("name")!!.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
+        textWord = intent.getStringExtra("name")!!.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
+
+        binding.word.text = textWord
+
+        binding.activityTitle.text = String.format(resources.getString(R.string.word_activity_title), textWord)
+
         idword = intent.getIntExtra("idword",0).toLong()
 
 
         loadRules()
+        loadHomophones()
 
-//        expandableListView = binding.expandableListView
-//        expandableListDetail = data
-//        expandableListTitle = ArrayList(expandableListDetail!!.keys)
-//        expandableListAdapter = CustomExpandableListAdapter(
-//            this, expandableListTitle as ArrayList<String>,
-//            expandableListDetail!!
-//        )
-//        expandableListView!!.setAdapter(expandableListAdapter)
-//        expandableListView!!.setOnGroupExpandListener { groupPosition ->
-//            Toast.makeText(
-//                applicationContext,
-//                (expandableListTitle as ArrayList<String>)[groupPosition] + " List Expanded.",
-//                Toast.LENGTH_SHORT
-//            ).show()
-//        }
-//
-//        expandableListView!!.setOnChildClickListener { parent, v, groupPosition, childPosition, id ->
-//            Toast.makeText(
-//                applicationContext,
-//                (expandableListTitle as ArrayList<String>)[groupPosition]
-//                        + " -> "
-//                        + expandableListDetail!![(expandableListTitle as ArrayList<String>)[groupPosition]]!![childPosition],
-//                Toast.LENGTH_SHORT
-//            ).show()
-//            false
-//        }
 
-        recyclerView = findViewById(es.com.uam.eps.tfg.learnp.R.id.rules) ?: RecyclerView(applicationContext)
+        rulesRecyclerView = findViewById(R.id.rules) ?: RecyclerView(applicationContext)
+
+        rulesRecyclerView.addItemDecoration(
+            DividerItemDecoration(
+                baseContext,
+                LinearLayout.VERTICAL
+            )
+        )
+        homophonesRecyclerView = findViewById(R.id.homophones)
+        homophonesRecyclerView.addItemDecoration(
+            DividerItemDecoration(
+                baseContext,
+                LinearLayout.VERTICAL
+            )
+        )
 
 
 
 
 
+
+    }
+
+    private fun loadHomophones() {
+        Log.i(ContentValues.TAG, "loadHomophones")
+        val dbr  = DbRequest()
+        val wordApi = dbr.retrofit.create(WordApi::class.java) as WordApi
+
+        wordApi.getWordHomophones(idword)
+            .enqueue(object : Callback<List<Word>> {
+                override fun onResponse(
+                    call: Call<List<Word>>,
+                    response: Response<List<Word>>
+                ) {
+                    homophones = response.body()!!
+                    populateHomophonesListView(homophones)
+                }
+
+
+                override fun onFailure(call: Call<List<Word>>, t: Throwable) {
+                    Log.i(ContentValues.TAG,"La carga de ejemplos ha fallado")
+                }
+
+            })
 
     }
 
@@ -109,7 +133,7 @@ class WordActivity : AppCompatActivity() {
                     response: Response<List<Rule>>
                 ) {
                     rules = response.body()!!
-                    populateListView(rules)
+                    populateRulesListView(rules)
                 }
 
 
@@ -121,15 +145,86 @@ class WordActivity : AppCompatActivity() {
 
     }
 
-    private fun populateListView(rules: List<Rule>) {
+    private fun populateRulesListView(rules: List<Rule>) {
         Log.i(ContentValues.TAG, "PopulateListView")
         this.ruleAdapter = RuleAdapter(rules)
 
-        recyclerView.adapter = ruleAdapter
-        recyclerView.layoutManager = LinearLayoutManager(applicationContext)
-        recyclerView.adapter!!.notifyDataSetChanged()
+        rulesRecyclerView.adapter = ruleAdapter
+        ruleAdapter.setOnItemClickListener(object : RuleAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                var clicked = rules[position]
+
+                Toast.makeText(this@WordActivity, "Has clickado en la regla: " + clicked.idrule + " Text: " + clicked.text, Toast.LENGTH_SHORT).show()
+
+                var myIntent = Intent(this@WordActivity, RuleActivity::class.java)
+                myIntent.putExtra("idrule", clicked.idrule)
+                myIntent.putExtra("text", clicked.text)
+
+                this@WordActivity.startActivity(myIntent)
+
+            }
+
+        })
+        if(rules.isEmpty()){
+            rulesRecyclerView.visibility = View.GONE
+            binding.textNoRules.visibility = View.VISIBLE
+
+        }else{
+            rulesRecyclerView.visibility = View.VISIBLE
+            binding.textNoRules.visibility = View.GONE
+        }
+        rulesRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
+        rulesRecyclerView.adapter!!.notifyDataSetChanged()
 
 
     }
+    private fun populateHomophonesListView(homophones: List<Word>) {
+        Log.i(ContentValues.TAG, "PopulateListView")
+        this.wordAdapter = WordAdapter(homophones)
+
+        homophonesRecyclerView.adapter = wordAdapter
+        wordAdapter.setOnItemClickListener(object : WordAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+
+            }
+
+        })
+        if(homophones.isEmpty()){
+            homophonesRecyclerView.visibility = View.GONE
+            binding.textNoHomophones.visibility = View.VISIBLE
+
+        }else{
+            homophonesRecyclerView.visibility = View.VISIBLE
+            binding.textNoHomophones.visibility = View.GONE
+        }
+        homophonesRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
+        homophonesRecyclerView.adapter!!.notifyDataSetChanged()
+
+
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(Locale.ENGLISH)
+
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS","The Language not supported!")
+            } else {
+                spkButton.isEnabled = true
+            }
+        }
+    }
+    private fun speakOut() {
+        tts.speak(textWord, TextToSpeech.QUEUE_FLUSH, null,"")
+    }
+
+    public override fun onDestroy() {
+        // Shutdown TTS when
+        // activity is destroyed
+        tts.stop()
+        tts.shutdown()
+        super.onDestroy()
+    }
+
 
 }

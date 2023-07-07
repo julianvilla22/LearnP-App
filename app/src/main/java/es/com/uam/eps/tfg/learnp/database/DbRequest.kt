@@ -17,7 +17,7 @@ class DbRequest {
 
     private fun initializeRetrofit() {
         retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.29:8080")
+            .baseUrl("https://learnp-bbb7a5d36c06.herokuapp.com")
             .addConverterFactory(GsonConverterFactory.create(Gson()))
             .build()
     }

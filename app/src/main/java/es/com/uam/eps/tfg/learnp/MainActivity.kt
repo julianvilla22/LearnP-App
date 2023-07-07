@@ -3,6 +3,8 @@ package es.com.uam.eps.tfg.learnp
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.content.res.Resources
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.snackbar.Snackbar
@@ -13,10 +15,13 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Adapter
+import android.widget.LinearLayout
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
@@ -57,6 +62,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
         //setSupportActionBar(binding.toolbar)
 
         /*val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -83,7 +90,9 @@ class MainActivity : AppCompatActivity() {
 
         loadWords()
 
+
         searchView = findViewById(R.id.search)
+        searchView.animation
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -120,6 +129,12 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                baseContext,
+                LinearLayout.VERTICAL
+            )
+        )
 
 
 
@@ -198,6 +213,8 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
         recyclerView.adapter!!.notifyDataSetChanged()
 
+
+
     }
 
     private fun updateResults(query: String){
@@ -210,7 +227,14 @@ class MainActivity : AppCompatActivity() {
                 w.name.lowercase().contains(query.lowercase())
             })
         }
-
+        if(results.isEmpty()){
+            recyclerView.visibility = View.GONE
+            binding.textNoResult.text = "Your search \"$query\" did not yield any results."
+            binding.textNoResult.visibility = View.VISIBLE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            binding.textNoResult.visibility = View.INVISIBLE
+        }
 
         recyclerView.adapter!!.notifyDataSetChanged()
 

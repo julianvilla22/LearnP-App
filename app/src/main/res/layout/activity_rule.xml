@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RuleActivity">
+
+    <RelativeLayout
+        android:id="@+id/relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="10sp">
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/Theme.LearnP.AppBarOverlay">
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <TextView
+            android:id="@+id/title_rule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rule_title"
+            android:textSize="40sp"
+            android:layout_below="@id/app_bar" />
+
+<!--        <ExpandableListView-->
+<!--            android:id="@+id/expandableListView"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_below="@+id/word"-->
+<!--            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"-->
+<!--            android:divider="@android:color/darker_gray"-->
+<!--            android:dividerHeight="0.5dp" />-->
+
+        <LinearLayout
+            android:id="@+id/description_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_rule"
+            android:orientation="vertical"
+            android:layout_marginTop="20sp">
+
+
+
+            <TextView
+                android:id="@+id/rule_description_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rule_description_title"
+                android:textSize="30dp"
+                android:layout_below="@id/title_rule"
+                app:layout_constraintTop_toBottomOf="@id/word"/>
+
+
+            <TextView
+                android:id="@+id/rule_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rule_description_title"
+                android:text="The rule description"
+                android:layout_marginTop="10sp"
+                android:textSize="20sp"
+                />
+
+        </LinearLayout>
+
+
+<!--        <View-->
+<!--            android:id="@+id/divider"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="1dp"-->
+<!--            android:background="?android:attr/listDivider" />-->
+
+<!--        <ExpandableListView-->
+<!--            android:id="@+id/expandable_examples"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_below="@+id/word"-->
+<!--            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"-->
+<!--            android:divider="@android:color/darker_gray"-->
+<!--            android:dividerHeight="0.5dp" />-->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/examples_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/description_block"
+            android:layout_marginTop="20sp"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/title_examples"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Examples"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/examples"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title_examples"
+                android:layout_marginHorizontal="10dp"
+
+                app:layout_constraintHeight_max="200sp"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="8dp"
+                android:maxHeight="10sp"
+                android:scrollbars="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_examples"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/text_no_examples"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/text_no_examples"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_examples"
+                app:layout_constraintVertical_bias="0.0" />
+            />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/exceptions_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/examples_block"
+            android:orientation="vertical"
+            android:layout_marginTop="20sp">
+
+
+            <TextView
+                android:id="@+id/title_exceptions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/exceptions_title"
+                android:textSize="30sp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/exceptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:scrollbars="vertical"/>
+            <TextView
+                android:id="@+id/text_no_exceptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/text_no_exceptions"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
