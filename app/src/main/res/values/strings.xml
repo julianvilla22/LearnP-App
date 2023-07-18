@@ -20,4 +20,10 @@
     <string name="text_no_examples">Sorry, we don\'t have any example for this rule yet.</string>
     <string name="text_no_exceptions">There are no exceptions for this rule or we don\'t have them yet.</string>
     <string name="exceptions_title">Exceptions</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="eslogan">Your phonetics consultation app.</string>
+    <string name="touch_text">Touch anywhere to continue</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>

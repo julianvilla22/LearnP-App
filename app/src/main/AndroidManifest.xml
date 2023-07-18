@@ -25,8 +25,20 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".HomeActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LearnP.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".RuleActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.LearnP.NoActionBar"/>
         <activity
             android:name=".WordActivity"
             android:exported="false"
@@ -35,12 +47,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="@string/title_activity_main"
             android:theme="@style/Theme.LearnP.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
     </application>

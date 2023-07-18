@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,11 +23,8 @@ import retrofit2.Response
 class RuleActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRuleBinding
-
-    private lateinit var rules : List<Rule>
     private lateinit var examples : List<Word>
     private lateinit var exceptions : List<Word>
-    private lateinit var rulesRecyclerView: RecyclerView
     private lateinit var examplesRecyclerView: RecyclerView
     private lateinit var exceptionsRecyclerView: RecyclerView
     private var idrule: Long = 0
@@ -39,6 +37,14 @@ class RuleActivity : AppCompatActivity() {
 
         binding = ActivityRuleBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val toolbar : Toolbar = binding.toolbar
+        this.setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
 
         idrule = intent.getLongExtra("idrule",0).toLong()
         description = intent.getStringExtra("text")!!

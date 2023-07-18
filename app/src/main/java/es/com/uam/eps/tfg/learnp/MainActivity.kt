@@ -77,19 +77,7 @@ class MainActivity : AppCompatActivity() {
         db = DatabaseHelper(this)
         recyclerView = findViewById(R.id.results) ?: RecyclerView(applicationContext)
 
-        /**
-
-        lifecycleScope.launch {
-            list = db.executeWordQuery("SELECT * FROM specs.word")
-            // Aquí puedes hacer lo que necesites con los datos obtenidos
-            wordAdapter = WordAdapter(list)
-            recyclerView.adapter = wordAdapter
-            recyclerView.layoutManager = LinearLayoutManager(applicationContext)
-            recyclerView.adapter!!.notifyDataSetChanged()
-        }*/
-
         loadWords()
-
 
         searchView = findViewById(R.id.search)
         searchView.animation
@@ -103,28 +91,12 @@ class MainActivity : AppCompatActivity() {
                 } else
                     updateResults("")
 
-//                lifecycleScope.launch {
-//                    list = db.executeWordQuery("SELECT * FROM specs.word WHERE name LIKE '%$query%'")
-//                    // Aquí puedes hacer lo que necesites con los datos obtenidos
-//                    wordAdapter = WordAdapter(list)
-//                    recyclerView.adapter = wordAdapter
-//                    recyclerView.layoutManager = LinearLayoutManager(applicationContext)
-//                    recyclerView.adapter!!.notifyDataSetChanged()
-//                }
                 return false
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
                 Log.i(TAG,"Llego al querytextchange")
                 updateResults(newText)
-//                lifecycleScope.launch {
-//                    list = db.executeWordQuery("SELECT * FROM specs.word WHERE name LIKE '%$newText%'")
-//                    // Aquí puedes hacer lo que necesites con los datos obtenidos
-//                    wordAdapter = WordAdapter(list)
-//                    recyclerView.adapter = wordAdapter
-//                    recyclerView.layoutManager = LinearLayoutManager(applicationContext)
-//                    recyclerView.adapter!!.notifyDataSetChanged()
-//                }
                 return true
             }
 
@@ -200,7 +172,7 @@ class MainActivity : AppCompatActivity() {
             override fun onItemClick(position: Int) {
                 var clicked = results[position]
 
-                Toast.makeText(this@MainActivity, "Has clickado en la palabra: " + clicked.name + " Id: " + clicked.idword, Toast.LENGTH_SHORT).show()
+                Log.i(TAG, "Has clickado en la palabra: " + clicked.name + " Id: " + clicked.idword)
 
                 var myIntent = Intent(this@MainActivity, WordActivity::class.java)
                 myIntent.putExtra("idword", clicked.idword)

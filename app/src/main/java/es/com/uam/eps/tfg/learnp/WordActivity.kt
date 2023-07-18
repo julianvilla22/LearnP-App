@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,6 +51,14 @@ class WordActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         binding = ActivityWordBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val toolbar : Toolbar = binding.toolbar
+        this.setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
+
         spkButton = binding.ttsButton
         spkButton.isEnabled = false
 
@@ -59,8 +68,6 @@ class WordActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             speakOut()
         }
 
-
-        //setSupportActionBar(binding.toolbar)
         textWord = intent.getStringExtra("name")!!.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
 
         binding.word.text = textWord
@@ -154,7 +161,7 @@ class WordActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             override fun onItemClick(position: Int) {
                 var clicked = rules[position]
 
-                Toast.makeText(this@WordActivity, "Has clickado en la regla: " + clicked.idrule + " Text: " + clicked.text, Toast.LENGTH_SHORT).show()
+                Log.i(ContentValues.TAG, "Has clickado en la regla: " + clicked.idrule + " Text: " + clicked.text)
 
                 var myIntent = Intent(this@WordActivity, RuleActivity::class.java)
                 myIntent.putExtra("idrule", clicked.idrule)
@@ -219,8 +226,6 @@ class WordActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     public override fun onDestroy() {
-        // Shutdown TTS when
-        // activity is destroyed
         tts.stop()
         tts.shutdown()
         super.onDestroy()

@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+
     <RelativeLayout
         android:id="@+id/relative_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_centerInParent="true"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"
-        android:layout_centerInParent="true">
+        tools:layout_editor_absoluteY="0dp">
+
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
@@ -23,21 +25,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 app:popupTheme="@style/Theme.LearnP.PopupOverlay" />
+
             <SearchView
                 android:id="@+id/search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/app_bar"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginVertical="5dp"
-                android:layout_below="@id/app_bar"/>
+                android:inputType="text"
+                android:isScrollContainer="true"
+                android:keepScreenOn="true"
+                android:queryHint="Search for a word..." />
 
         </com.google.android.material.appbar.AppBarLayout>
 
         <!--<include layout="@layout/content_main" />-->
-
-
-
-
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -47,19 +50,19 @@
             android:layout_below="@id/app_bar"
             android:layout_marginHorizontal="10dp"
             android:layout_marginVertical="10dp"
+            android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:scrollbars="vertical"/>
+            app:layout_constraintStart_toStartOf="parent" />
+
         <TextView
             android:id="@+id/text_no_result"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/app_bar"
             android:layout_marginHorizontal="10dp"
-            android:textSize="20sp"
-            android:visibility="invisible"
             android:text="There are no results for this query"
-            />
+            android:textSize="20sp"
+            android:visibility="invisible" />
     </RelativeLayout>
     <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

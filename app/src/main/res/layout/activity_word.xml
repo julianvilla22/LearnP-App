@@ -4,19 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WordActivity">
+    tools:context=".WordActivity"
+    >
 
     <RelativeLayout
         android:id="@+id/relative_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true">
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar"
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/Theme.LearnP.AppBarOverlay"
-
+            android:background="@color/purple_500"
             >
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -42,7 +44,7 @@
                     android:src="@drawable/spkr30" />
             </RelativeLayout>
 
-        </com.google.android.material.appbar.AppBarLayout>
+        </androidx.appcompat.widget.Toolbar>
 
         <TextView
             android:id="@+id/word"
@@ -51,7 +53,7 @@
             android:text="WORD"
             android:textSize="40sp"
             android:layout_marginStart="5sp"
-            android:layout_below="@id/app_bar" />
+            android:layout_below="@id/toolbar" />
 
 
         <LinearLayout
@@ -116,21 +118,12 @@
                 android:layout_height="wrap_content"
                 android:visibility="invisible"
                 android:text="@string/text_no_homophones"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:layout_marginHorizontal="10dp"/>
         </LinearLayout>
 
 
 
     </RelativeLayout>
-<!--    <ExpandableListView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
-
-<!--        <ListView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content">-->
-
-<!--        </ListView>-->
-<!--    </ExpandableListView>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
