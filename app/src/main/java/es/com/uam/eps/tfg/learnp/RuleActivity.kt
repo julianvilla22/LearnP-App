@@ -14,7 +14,6 @@ import es.com.uam.eps.tfg.learnp.adapter.WordAdapter
 import es.com.uam.eps.tfg.learnp.database.DbRequest
 import es.com.uam.eps.tfg.learnp.database.WordApi
 import es.com.uam.eps.tfg.learnp.databinding.ActivityRuleBinding
-import es.com.uam.eps.tfg.learnp.model.Rule
 import es.com.uam.eps.tfg.learnp.model.Word
 import retrofit2.Call
 import retrofit2.Callback
@@ -90,6 +89,9 @@ class RuleActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<List<Word>>, t: Throwable) {
                     Log.i(ContentValues.TAG,"La carga de ejemplos ha fallado")
+                    binding.textConnectionFailedExamples.visibility = View.VISIBLE
+                    binding.textNoExamples.visibility = View.GONE
+                    binding.examples.visibility = View.GONE
                 }
 
             })
@@ -113,6 +115,9 @@ class RuleActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<List<Word>>, t: Throwable) {
                     Log.i(ContentValues.TAG,"La carga de excepciones ha fallado")
+                    binding.textConnectionFailedExceptions.visibility = View.VISIBLE
+                    binding.textNoExceptions.visibility = View.GONE
+                    binding.exceptions.visibility = View.GONE
                 }
 
             })
@@ -144,6 +149,7 @@ class RuleActivity : AppCompatActivity() {
             override fun onItemClick(position: Int) {
 
             }
+
 
         })
         if(exceptions.isEmpty()){

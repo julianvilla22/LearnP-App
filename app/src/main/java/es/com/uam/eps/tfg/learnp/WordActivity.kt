@@ -2,15 +2,15 @@ package es.com.uam.eps.tfg.learnp
 
 import android.content.ContentValues
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
-import android.speech.tts.Voice
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.ImageButton
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,12 +25,11 @@ import es.com.uam.eps.tfg.learnp.model.Word
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
+import java.util.Locale
 
 
 class WordActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityWordBinding
 
     private lateinit var rules : List<Rule>
@@ -121,7 +120,10 @@ class WordActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
                 override fun onFailure(call: Call<List<Word>>, t: Throwable) {
-                    Log.i(ContentValues.TAG,"La carga de ejemplos ha fallado")
+                    Log.i(ContentValues.TAG,"La carga de homófonos ha fallado")
+                    binding.textConnectionFailed.visibility = View.VISIBLE
+                    binding.textNoHomophones.visibility = View.GONE
+                    binding.homophones.visibility = View.GONE
                 }
 
             })
@@ -146,6 +148,9 @@ class WordActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                 override fun onFailure(call: Call<List<Rule>>, t: Throwable) {
                     Log.i(ContentValues.TAG,"La carga de reglas ha fallado")
+                    binding.textConnectionFailedRules.visibility = View.VISIBLE
+                    binding.textNoRules.visibility = View.GONE
+                    binding.rules.visibility = View.GONE
                 }
 
             })

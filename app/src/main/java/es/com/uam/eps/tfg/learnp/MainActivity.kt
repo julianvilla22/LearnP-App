@@ -1,52 +1,33 @@
 package es.com.uam.eps.tfg.learnp
 
-import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Intent
-import android.content.res.Resources
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Adapter
 import android.widget.LinearLayout
 import android.widget.SearchView
-import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.Request
-
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import es.com.uam.eps.tfg.learnp.adapter.WordAdapter
-import es.com.uam.eps.tfg.learnp.database.DatabaseHelper
 import es.com.uam.eps.tfg.learnp.database.DbRequest
 import es.com.uam.eps.tfg.learnp.database.WordApi
 import es.com.uam.eps.tfg.learnp.databinding.ActivityMainBinding
 import es.com.uam.eps.tfg.learnp.model.Word
-import kotlinx.coroutines.launch
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var db: DatabaseHelper;
     private lateinit var words : List<Word>
     private val results = mutableListOf<Word>()
     private lateinit var recyclerView: RecyclerView
@@ -63,24 +44,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-
-        //setSupportActionBar(binding.toolbar)
-
-        /*val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)*/
-
-        /*binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }*/
-        db = DatabaseHelper(this)
         recyclerView = findViewById(R.id.results) ?: RecyclerView(applicationContext)
 
         loadWords()
 
         searchView = findViewById(R.id.search)
-        searchView.animation
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -114,25 +82,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
+
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         return when (item.itemId) {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
     }
 
 
@@ -151,19 +111,26 @@ class MainActivity : AppCompatActivity() {
                         w.name.uppercase()
                     }
                     results.addAll(words)
-                    populateListView(results)
+                    populateListView()
                 }
 
 
                 override fun onFailure(call: Call<List<Word>>, t: Throwable) {
                     Log.i(TAG,"La carga de palabras ha fallado")
+                    recyclerView.visibility = View.GONE
+                    binding.textNoResult.visibility = View.GONE
+                    binding.textConnectionFailed.visibility = View.VISIBLE
+                    words = ArrayList()
+                    populateListView()
+
+
                 }
 
                 })
 
     }
 
-    private fun populateListView(body: List<Word>) {
+    private fun populateListView() {
         Log.i(TAG, "PopulateListView")
         this.wordAdapter = WordAdapter(results)
 
@@ -200,6 +167,7 @@ class MainActivity : AppCompatActivity() {
             })
         }
         if(results.isEmpty()){
+            binding.textConnectionFailed.visibility = View.GONE
             recyclerView.visibility = View.GONE
             binding.textNoResult.text = "Your search \"$query\" did not yield any results."
             binding.textNoResult.visibility = View.VISIBLE

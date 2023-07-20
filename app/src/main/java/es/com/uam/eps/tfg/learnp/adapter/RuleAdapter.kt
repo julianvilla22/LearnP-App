@@ -33,13 +33,13 @@ class RuleAdapter(private val ruleList : List<Rule>) : RecyclerView.Adapter<Rule
 
 
     override fun onBindViewHolder(holder:Ruleviewholder,position:Int){
-        val r:Rule=this.ruleList[position]?:Rule(-1, -1,"No results")
+        val r:Rule=this.ruleList[position]
 
         holder.textResult.text=r.text
     }
 
     override fun getItemCount():Int{
-        return ruleList.size?:0
+        return ruleList.size
     }
 
     class Ruleviewholder(itemView: View, listener: onItemClickListener) :RecyclerView.ViewHolder(itemView){

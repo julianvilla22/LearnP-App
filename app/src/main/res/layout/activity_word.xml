@@ -85,7 +85,16 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:text="@string/text_no_rules"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:layout_marginHorizontal="10dp"/>
+            <TextView
+                android:id="@+id/text_connection_failed_rules"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/text_connection_failed"
+                android:textSize="20sp"
+                android:layout_marginHorizontal="10dp"/>
 
         </LinearLayout>
         <LinearLayout
@@ -116,8 +125,16 @@
                 android:id="@+id/text_no_homophones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
+                android:visibility="gone"
                 android:text="@string/text_no_homophones"
+                android:textSize="20sp"
+                android:layout_marginHorizontal="10dp"/>
+            <TextView
+                android:id="@+id/text_connection_failed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/text_connection_failed"
                 android:textSize="20sp"
                 android:layout_marginHorizontal="10dp"/>
         </LinearLayout>

@@ -4,11 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import es.com.uam.eps.tfg.learnp.R
 import es.com.uam.eps.tfg.learnp.model.Word
-import java.util.*
+import java.util.Locale
 
 class WordAdapter (private val wordList : List<Word>) : RecyclerView.Adapter<WordAdapter.Wordviewholder>() {
 
@@ -36,13 +35,13 @@ class WordAdapter (private val wordList : List<Word>) : RecyclerView.Adapter<Wor
 
 
     override fun onBindViewHolder(holder: Wordviewholder, position: Int) {
-        val w : Word = this.wordList[position] ?: Word(-1, "No results")
+        val w : Word = this.wordList[position]
 
         holder.textResult.text = w.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
     }
 
     override fun getItemCount(): Int {
-        return wordList.size ?: 0
+        return wordList.size
     }
 
     class Wordviewholder(itemView: View, listener: onItemClickListener) : RecyclerView.ViewHolder(itemView) {

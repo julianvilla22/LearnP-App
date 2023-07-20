@@ -115,7 +115,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_examples"
                 app:layout_constraintVertical_bias="0.0"
-                android:layout_marginHorizontal="10sp"/>
+                android:layout_marginHorizontal="20sp"/>
+            <TextView
+                android:id="@+id/text_connection_failed_examples"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/text_connection_failed"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_examples"
+                app:layout_constraintVertical_bias="0.0"
+                android:layout_marginHorizontal="20sp"/>
             />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -151,6 +163,14 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:text="@string/text_no_exceptions"
+                android:textSize="20sp"
+                android:layout_marginHorizontal="10sp"/>
+            <TextView
+                android:id="@+id/text_connection_failed_exceptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/text_connection_failed"
                 android:textSize="20sp"
                 android:layout_marginHorizontal="10sp"/>
         </LinearLayout>
